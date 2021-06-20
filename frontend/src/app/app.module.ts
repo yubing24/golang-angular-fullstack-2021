@@ -3,16 +3,29 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { SearchCountryComponent } from '@components/search-country/search-country.component';
+import {HttpClientModule} from '@angular/common/http';
+import {SearchService} from '@services/search.service';
+import {INTERCEPTOR_PROVIDERS} from '@interceptors/interceptor-providers';
+import {FormsModule} from '@angular/forms';
+import { SearchCountryStatisticsComponent } from './components/search-country-statistics/search-country-statistics.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    SearchCountryComponent,
+    SearchCountryStatisticsComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule,
+    HttpClientModule,
   ],
-  providers: [],
+  providers: [
+    INTERCEPTOR_PROVIDERS,
+    SearchService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
