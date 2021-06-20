@@ -1,24 +1,15 @@
 package api
 
 import (
+	"errors"
 	"github.com/yubing24/golang-angular-fullstack-2021/model"
 	"github.com/yubing24/golang-angular-fullstack-2021/repository"
 	"github.com/yubing24/golang-angular-fullstack-2021/view"
 	"net/http"
+	"sort"
 )
 
-type searchCountryForm struct {
-	Name string `schema:"name"`
-	Code string `schema:"code"`
-}
 
-func (form searchCountryForm) ToCriteria() model.SearchCountryCriteria {
-	return model.SearchCountryCriteria{
-		Name: form.Name,
-		Code: form.Code,
-		MatchFull: false,
-	}
-}
 
 func SearchCountry(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
@@ -29,11 +20,24 @@ func SearchCountry(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		respond(ctx, w, http.StatusInternalServerError, err, nil)
 	} else {
-		output := make([]view.CountryVM, 0)
-		for _, each := range result {
-			output = append(output, view.NewCountryVM(each))
+
+		if result == nil || len(result) == 0 {
+			respond(ctx, w, http.StatusNotFound, errors.New("no country matches the criteria"), nil)
+			return
 		}
+
+		records := make([]view.CountryVM, 0)
+		sort.Sort(sort.Reverse(model.ByPopulation(result)))
+		for _, each := range result {
+			records = append(records, view.NewCountryVM(each))
+		}
+
+		statistics := model.GetSearchCountryResultStatistics(result)
+
 		w.Header().Set("Content-Type", "application/json")
-		respond(ctx, w, http.StatusOK, nil, output)
+		respond(ctx, w, http.StatusOK, nil, map[string]interface{} {
+			"records":    records,
+			"statistics": statistics,
+		})
 	}
 }

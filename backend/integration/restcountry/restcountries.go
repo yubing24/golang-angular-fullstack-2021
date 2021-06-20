@@ -30,6 +30,15 @@ type LanguageDTO struct {
 	NativeName string `json:"nativeName"`
 }
 
+func (dto LanguageDTO) ToModel() model.Language {
+	return model.Language{
+		Name:           dto.Name,
+		NativeName:     dto.NativeName,
+		Iso_639_1_Name: dto.ISO639_1,
+		Iso_639_2_Name: dto.ISO639_2,
+	}
+}
+
 type RestCountryDTO struct {
 	Name              string   `json:"name"`
 	TopLevelDomain    []string `json:"topLevelDomain"`
@@ -38,9 +47,9 @@ type RestCountryDTO struct {
 	CallingCode       []string
 	Capital           string
 	AltSpellings      []string
-	Region            string
-	SubRegion         string
-	Population        int
+	Region            string `json:"region"`
+	SubRegion         string `json:"subregion"`
+	Population        int    `json:"population"`
 	LatitudeLongitude []float32
 	Demonym           string
 	Area              float32
@@ -50,7 +59,7 @@ type RestCountryDTO struct {
 	NativeName        string
 	NumericCode       string
 	Currencies        []CurrencyDTO
-	Languages         []LanguageDTO
+	Languages         []LanguageDTO `json:"languages"`
 	Translations      map[string]string
 	Flag              string
 	RegionalBlocs     interface{}
@@ -58,10 +67,19 @@ type RestCountryDTO struct {
 }
 
 func (dto RestCountryDTO) ToModel() model.Country {
+	languages := make([]model.Language, 0)
+	for _, each := range dto.Languages {
+		languages = append(languages, each.ToModel())
+	}
 	return model.Country{
-		Name: dto.Name,
-		Alpha2Code: dto.Alpha2Code,
-		Alpha3Code: dto.Alpha3Code,
+		Name:         dto.Name,
+		Alpha2Code:   dto.Alpha2Code,
+		Alpha3Code:   dto.Alpha3Code,
+		Population:   dto.Population,
+		Region:       dto.Region,
+		SubRegion:    dto.SubRegion,
+		FlagImageUrl: dto.Flag,
+		Languages:    languages,
 	}
 }
 

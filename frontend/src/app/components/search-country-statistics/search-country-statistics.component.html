@@ -1,0 +1,41 @@
+<div class="container">
+  <div style="text-align: center" class="is-size-4 m-4">Total: {{ statistics.TotalCountries }}</div>
+  <div class="columns is-centered m-4">
+    <div class="column is-one-third">
+
+      <div class="is-size-4">Regions</div>
+      <div class="table-container">
+        <table class="table">
+          <thead>
+          <th>Name</th>
+          <th>Count</th>
+          </thead>
+          <tbody>
+          <tr *ngFor="let each of statistics.RegionCounters | keyvalue">
+            <td>{{ each.key }}</td>
+            <td>{{ each.value }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="column is-one-third">
+      <div class="is-size-4">Sub-Regions</div>
+      <div class="table-container">
+        <table class="table">
+          <thead>
+          <th>Name</th>
+          <th>Count</th>
+          </thead>
+          <tbody>
+          <tr *ngFor="let each of statistics.SubRegionCounters | keyvalue">
+            <td>{{ each.key }}</td>
+            <td>{{ each.value }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>

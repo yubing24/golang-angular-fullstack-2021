@@ -1,0 +1,53 @@
+<div class="container">
+  <h1 class="is-size-4">Search country by name or abbreviations:</h1>
+  <div class="columns">
+    <div class=" column is-half m-2">
+      <input class="input" type="text" [(ngModel)]="searchCriteria"></div>
+    <div class="column is-one-third">
+      <button class="button is-info m-2" (click)="searchCountries()" [disabled]="searchButtonDisabled">Search</button>
+      <button class="button is-danger m-2" (click)="clear()">Clear</button>
+    </div>
+  </div>
+  <div *ngIf="hasResults">
+
+    <div style="text-align: center" class="is-size-3 m-4">Results</div>
+    <div class="columns is-centered m-4">
+      <div class="table-container">
+        <table class="table">
+          <thead>
+          <th>Name</th>
+          <th>Alpha-2 Code</th>
+          <th>Alpha-3 Code</th>
+          <th>Flag</th>
+          <th>Region</th>
+          <th>Sub-Region</th>
+          <th>Populations</th>
+          <th>Languages</th>
+          </thead>
+          <tbody>
+          <tr *ngFor="let each of results">
+            <td>{{ each.name }}</td>
+            <td>{{ each.alpha2Code }}</td>
+            <td>{{ each.alpha3Code }}</td>
+            <td>
+              <img style="max-height: 1em;" src="{{each.flagImageUrl}}">
+            </td>
+            <td>{{ each.region }}</td>
+            <td>{{ each.subRegion }}</td>
+            <td>{{ each.population }}</td>
+            <td>
+              <ul>
+                <li *ngFor="let eachLang of each.languages">
+                  {{ eachLang.name }}
+                </li>
+              </ul>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div style="text-align: center" class="is-size-3">Statistics</div>
+    <app-search-country-statistics [statistics]="this.statistics"></app-search-country-statistics>
+  </div>
+</div>
