@@ -7,7 +7,7 @@ import {SearchCountryStatistics} from '@app/models/country';
   styleUrls: ['./search-country-statistics.component.scss']
 })
 export class SearchCountryStatisticsComponent implements OnInit {
-  @Input() statistics: SearchCountryStatistics;
+  @Input() statistics: SearchCountryStatistics | null = null;
   constructor() { }
   ngOnInit(): void {
   }

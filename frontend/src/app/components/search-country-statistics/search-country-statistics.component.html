@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" *ngIf="!!statistics">
   <div style="text-align: center" class="is-size-4 m-4">Total: {{ statistics.TotalCountries }}</div>
   <div class="columns is-centered m-4">
     <div class="column is-one-third">
@@ -35,7 +35,6 @@
           </tbody>
         </table>
       </div>
-
     </div>
   </div>
 </div>
