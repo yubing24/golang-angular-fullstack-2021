@@ -1,15 +1,18 @@
 <div class="container">
   <h1 class="is-size-4">Search country by name or abbreviations:</h1>
-  <div class="columns">
-    <div class=" column is-half m-2">
-      <input class="input" type="text" [(ngModel)]="searchCriteria"></div>
-    <div class="column is-one-third">
-      <button class="button is-info m-2" (click)="searchCountries()" [disabled]="searchButtonDisabled">Search</button>
-      <button class="button is-danger m-2" (click)="clear()">Clear</button>
-    </div>
+  <div >
+    <form class="columns" [formGroup]="searchForm" (ngSubmit)="searchCountries($event)">
+      <div class="column is-half m-2">
+        <input class="input" formControlName="name" required>
+        <p *ngIf="name.invalid && (name.dirty || name.touched)" class="help is-danger">Invalid search criteria
+        </p>
+      </div>
+      <div class="column is-one-third">
+        <button class="button is-info m-2" [disabled]="!searchForm.valid || searchButtonDisabled" type="submit">Search</button>
+      </div>
+    </form>
   </div>
   <div *ngIf="hasResults">
-
     <div style="text-align: center" class="is-size-3 m-4">Results</div>
     <div class="columns is-centered m-4">
       <div class="table-container">
@@ -49,5 +52,8 @@
     </div>
     <div style="text-align: center" class="is-size-3">Statistics</div>
     <app-search-country-statistics [statistics]="this.statistics"></app-search-country-statistics>
+  </div>
+  <div *ngIf="!!errorMessage" class="notification is-danger">
+    {{ errorMessage }}
   </div>
 </div>

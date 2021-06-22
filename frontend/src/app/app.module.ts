@@ -7,7 +7,7 @@ import { SearchCountryComponent } from '@components/search-country/search-countr
 import {HttpClientModule} from '@angular/common/http';
 import {SearchService} from '@services/search.service';
 import {INTERCEPTOR_PROVIDERS} from '@interceptors/interceptor-providers';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { SearchCountryStatisticsComponent } from './components/search-country-statistics/search-country-statistics.component';
 
 @NgModule({
@@ -20,6 +20,7 @@ import { SearchCountryStatisticsComponent } from './components/search-country-st
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
   ],
   providers: [

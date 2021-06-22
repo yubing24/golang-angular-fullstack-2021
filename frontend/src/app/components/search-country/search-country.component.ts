@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import {SearchService} from '../../services/search.service';
+import {Component, OnInit} from '@angular/core';
+import {SearchService} from '@services/search.service';
 import {Country, SearchCountryStatistics} from '@app/models/country';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-search-country',
@@ -9,28 +10,42 @@ import {Country, SearchCountryStatistics} from '@app/models/country';
 })
 export class SearchCountryComponent implements OnInit {
 
-  public searchCriteria  = '';
   public searchButtonDisabled = false;
 
-  constructor(
-    private searchService: SearchService
-  ) { }
+  public errorMessage: string | null = null;
 
-  get hasResults(): boolean {
-    return !!this.results && this.results.length > 0;
+  searchForm: FormGroup = this.formBuilder.group({
+    name: ['', [Validators.required]]
+  });
+
+
+  get name(): any {
+    return this.searchForm.get('name');
   }
 
   public results: any[] = [];
   public statistics: any = null;
 
+  constructor(
+    private searchService: SearchService,
+    private formBuilder: FormBuilder
+  ) {
+  }
+
+  get hasResults(): boolean {
+    return !!this.results && this.results.length > 0;
+  }
+
   ngOnInit(): void {
   }
 
-  public searchCountries(): void {
+  public searchCountries(evt: any): void {
+    evt.preventDefault();
     this.searchButtonDisabled = true;
+    this.errorMessage = null;
     const form = {
-      name: this.searchCriteria,
-      code: this.searchCriteria
+      name: this.name.value.toString(),
+      code: this.name.value.toString()
     };
     this.results = [];
     this.searchService.searchCountry(form).subscribe(res => {
@@ -38,14 +53,14 @@ export class SearchCountryComponent implements OnInit {
       this.statistics = res.data.statistics as SearchCountryStatistics;
       this.searchButtonDisabled = false;
     }, err => {
-      console.log(`${JSON.stringify(err)}`);
-      alert(`Error: ${JSON.stringify(err.error.message)}`);
+      switch (err.error.status) {
+        case 404:
+          this.errorMessage = `Error: ${err.error.message}`;
+          break;
+        default:
+          alert(`Error: ${JSON.stringify(err.error.message)}`);
+      }
       this.searchButtonDisabled = false;
     });
-  }
-
-  public clear(): void {
-    this.searchCriteria = '';
-    this.results = [];
   }
 }
